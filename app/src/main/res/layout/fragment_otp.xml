@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background1">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loginLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20dp"
+        android:layout_marginTop="@dimen/_42dp"
+        android:layout_marginEnd="@dimen/_20dp"
+        android:background="@drawable/bg_login_card"
+        android:elevation="@dimen/_5dp"
+        android:padding="@dimen/_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvLoginTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/input_verification_code"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/vwDivider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2dp"
+            android:layout_marginTop="@dimen/_20dp"
+            android:background="@color/gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvLoginTitle" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvFirstName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20dp"
+            android:text="@string/we_ve_sent_a_6_digit_otp_to_your_work_email_please_enter_it_below_to_continue"
+            android:textAlignment="center"
+            android:textColor="@color/span_gray"
+            android:textSize="@dimen/_14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vwDivider" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/otpInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_20dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvFirstName">
+
+            <LinearLayout
+                android:id="@+id/llEnterOtp_OTP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edtRegisterOtp1"
+                    android:layout_width="@dimen/_45dp"
+                    android:layout_height="@dimen/_45dp"
+                    android:layout_marginStart="@dimen/_5dp"
+                    android:layout_marginEnd="@dimen/_5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_rectangle_grey"
+                    android:cursorVisible="false"
+                    android:gravity="center"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:nextFocusRight="@+id/editTxtOtp2"
+                    android:textColor="@color/black"
+                    android:textColorHint="@android:color/transparent"
+                    android:textSize="@dimen/_20sp">
+
+                    <requestFocus />
+
+                </androidx.appcompat.widget.AppCompatEditText>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edtRegisterOtp2"
+                    android:layout_width="@dimen/_45dp"
+                    android:layout_height="@dimen/_45dp"
+                    android:layout_marginStart="@dimen/_5dp"
+                    android:layout_marginEnd="@dimen/_5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_rectangle_grey"
+                    android:cursorVisible="false"
+                    android:gravity="center"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20sp" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edtRegisterOtp3"
+                    android:layout_width="@dimen/_45dp"
+                    android:layout_height="@dimen/_45dp"
+                    android:layout_marginStart="@dimen/_5dp"
+                    android:layout_marginEnd="@dimen/_5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_rectangle_grey"
+                    android:cursorVisible="false"
+                    android:gravity="center"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20sp" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edtRegisterOtp4"
+                    android:layout_width="@dimen/_45dp"
+                    android:layout_height="@dimen/_45dp"
+                    android:layout_marginStart="@dimen/_5dp"
+                    android:layout_marginEnd="@dimen/_5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_rectangle_grey"
+                    android:cursorVisible="false"
+                    android:gravity="center"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20sp" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edtRegisterOtp5"
+                    android:layout_width="@dimen/_45dp"
+                    android:layout_height="@dimen/_45dp"
+                    android:layout_marginStart="@dimen/_5dp"
+                    android:layout_marginEnd="@dimen/_5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_rectangle_grey"
+                    android:cursorVisible="false"
+                    android:gravity="center"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20sp" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edtRegisterOtp6"
+                    android:layout_width="@dimen/_45dp"
+                    android:layout_height="@dimen/_45dp"
+                    android:layout_marginStart="@dimen/_5dp"
+                    android:layout_marginEnd="@dimen/_5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_rectangle_grey"
+                    android:cursorVisible="false"
+                    android:gravity="center"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20sp" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtOtpError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:text="@string/incorrect_otp"
+                android:textAlignment="center"
+                android:textColor="@color/crimson_blush"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llEnterOtp_OTP" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtTimer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20dp"
+            android:text="@string/resend_otp_in"
+            android:textAlignment="center"
+            android:textColor="@color/_184a61"
+            android:textSize="@dimen/_14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/otpInput" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

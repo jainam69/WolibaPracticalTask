@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">WolibaPracticalTask</string>
+    <string name="next">Next</string>
+    <string name="login_credentials">Login Credentials</string>
+    <string name="first_name">First name</string>
+    <string name="enter_first_name">Enter first name</string>
+    <string name="last_name">Last name</string>
+    <string name="enter_last_name">Enter last name</string>
+    <string name="work_email">Work email</string>
+    <string name="enter_work_email">Enter work email</string>
+    <string name="company_name">Company Name</string>
+    <string name="woliba">Woliba</string>
+    <string name="input_verification_code">Input verification code</string>
+    <string name="we_ve_sent_a_6_digit_otp_to_your_work_email_please_enter_it_below_to_continue">We’ve sent a 6-digit OTP to your work email Please enter it below to continue.</string>
+    <string name="resend_otp_in">Resend OTP in %1$s</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="incorrect_otp">Incorrect OTP</string>
+    <string name="complete_your_profile">Complete Your Profile</string>
+    <string name="password">Password</string>
+    <string name="enter_password">Enter password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="enter_confirm_password">Enter confirm password</string>
+    <string name="birth_day">Birthday</string>
+    <string name="mm_dd_yyyy">MM/DD/YYYY</string>
+    <string name="contact_no">Contact number</string>
+    <string name="enter_contact_no">Enter contact number</string>
+    <string name="select_all_wellness_interests_that_apply_at_least_one_is_required">Select all wellness interests that apply — at least one is required.</string>
+</resources>

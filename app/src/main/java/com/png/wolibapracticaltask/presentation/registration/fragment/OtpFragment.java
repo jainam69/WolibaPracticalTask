@@ -1,0 +1,207 @@
+package com.png.wolibapracticaltask.presentation.registration.fragment;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.png.wolibapracticaltask.R;
+import com.png.wolibapracticaltask.databinding.FragmentOtpBinding;
+import com.png.wolibapracticaltask.presentation.state.RegistrationStep;
+import com.png.wolibapracticaltask.presentation.viewmodel.RegistrationViewModel;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+public class OtpFragment extends Fragment {
+
+    private FragmentOtpBinding binding;
+    private RegistrationViewModel viewModel;
+    private long mTimeLeftInMillis;
+    private CountDownTimer countDownTimer;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentOtpBinding.inflate(inflater, container, false);
+
+        initView();
+        otpInputHandle();
+        actionListener();
+
+        return binding.getRoot();
+    }
+
+    private void actionListener() {
+        binding.txtTimer.setOnClickListener(view -> {
+            if (getString(R.string.resend_otp).equals(binding.txtTimer.getText().toString())) {
+                binding.txtTimer.setTextColor(requireContext().getColor(R.color._184a61));
+                countDownTimer.start();
+            }
+        });
+    }
+
+    private void initView() {
+        viewModel = new ViewModelProvider(requireActivity()).get(RegistrationViewModel.class);
+        viewModel.setCurrentStep(RegistrationStep.OTP);
+
+        countDownTimer = new CountDownTimer(10000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimeLeftInMillis = millisUntilFinished;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish() {
+                binding.txtTimer.setText(getString(R.string.resend_otp));
+                binding.txtTimer.setTextColor(requireContext().getColor(R.color.froly));
+            }
+        }.start();
+
+    }
+
+    private void otpInputHandle() {
+        binding.edtRegisterOtp1.addTextChangedListener(
+                new GenericTextWatcher(requireActivity(), binding.edtRegisterOtp1, binding.edtRegisterOtp2)
+        );
+        binding.edtRegisterOtp2.addTextChangedListener(
+                new GenericTextWatcher(requireActivity(), binding.edtRegisterOtp2, binding.edtRegisterOtp3)
+        );
+        binding.edtRegisterOtp3.addTextChangedListener(
+                new GenericTextWatcher(requireActivity(), binding.edtRegisterOtp3, binding.edtRegisterOtp4)
+        );
+        binding.edtRegisterOtp4.addTextChangedListener(
+                new GenericTextWatcher(requireActivity(), binding.edtRegisterOtp4, binding.edtRegisterOtp5)
+        );
+        binding.edtRegisterOtp5.addTextChangedListener(
+                new GenericTextWatcher(requireActivity(), binding.edtRegisterOtp5, binding.edtRegisterOtp6)
+        );
+        binding.edtRegisterOtp6.addTextChangedListener(
+                new GenericTextWatcher(requireActivity(), binding.edtRegisterOtp6, null)
+        );
+
+        binding.edtRegisterOtp1.setOnKeyListener(new GenericKeyEvent(binding.edtRegisterOtp1, null));
+        binding.edtRegisterOtp2.setOnKeyListener(new GenericKeyEvent(binding.edtRegisterOtp2, binding.edtRegisterOtp1));
+        binding.edtRegisterOtp3.setOnKeyListener(new GenericKeyEvent(binding.edtRegisterOtp3, binding.edtRegisterOtp2));
+        binding.edtRegisterOtp4.setOnKeyListener(new GenericKeyEvent(binding.edtRegisterOtp4, binding.edtRegisterOtp3));
+        binding.edtRegisterOtp5.setOnKeyListener(new GenericKeyEvent(binding.edtRegisterOtp5, binding.edtRegisterOtp4));
+        binding.edtRegisterOtp6.setOnKeyListener(new GenericKeyEvent(binding.edtRegisterOtp6, binding.edtRegisterOtp5));
+    }
+
+    public class GenericKeyEvent implements View.OnKeyListener {
+
+        private final EditText currentView;
+        private final EditText previousView;
+
+        public GenericKeyEvent(EditText currentView, EditText previousView) {
+            this.currentView = currentView;
+            this.previousView = previousView;
+        }
+
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN &&
+                    keyCode == KeyEvent.KEYCODE_DEL &&
+                    currentView.getId() != R.id.edtRegisterOtp1 &&
+                    currentView.getText().toString().isEmpty()) {
+
+                if (previousView != null) {
+                    previousView.setText("");
+                    previousView.requestFocus();
+                }
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public class GenericTextWatcher implements TextWatcher {
+
+        private final Context context;
+        private final View currentView;
+        private final View nextView;
+
+        public GenericTextWatcher(Context context, View currentView, View nextView) {
+            this.context = context;
+            this.currentView = currentView;
+            this.nextView = nextView;
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String text = editable.toString();
+
+            if (text.length() == 1 && nextView != null) {
+                nextView.requestFocus();
+            }
+
+            if (currentView.getId() == R.id.edtRegisterOtp6 && text.length() == 1) {
+                hideKeyPad(context, currentView);
+            }
+
+            Activity activity = (Activity) context;
+            String otp = collectOtpFromInputs(activity);
+            Map<String, String> inputs = new HashMap<>();
+            inputs.put("otp", otp);
+            viewModel.validate(RegistrationStep.OTP, inputs); // Enable button or send OTP
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        private String collectOtpFromInputs(Activity activity) {
+            return getText(activity, R.id.edtRegisterOtp1) +
+                    getText(activity, R.id.edtRegisterOtp2) +
+                    getText(activity, R.id.edtRegisterOtp3) +
+                    getText(activity, R.id.edtRegisterOtp4) +
+                    getText(activity, R.id.edtRegisterOtp5) +
+                    getText(activity, R.id.edtRegisterOtp6);
+        }
+
+        private String getText(Activity activity, int id) {
+            EditText editText = activity.findViewById(id);
+            return editText.getText().toString().trim();
+        }
+    }
+
+    public static void hideKeyPad(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private void updateCountDownText() {
+        long minutes = (mTimeLeftInMillis / 1000) / 60;
+        long seconds = (mTimeLeftInMillis / 1000) % 60;
+
+        String timeLeftFormatted = String.format(Locale.getDefault(), " %02d:%02d", minutes, seconds);
+        binding.txtTimer.setText(getString(R.string.resend_otp_in, timeLeftFormatted));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null; // Avoid memory leaks
+    }
+}

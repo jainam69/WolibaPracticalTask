@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registration_nav_graph"
+    app:startDestination="@id/interestFragment">
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.png.wolibapracticaltask.presentation.registration.fragment.RegisterFragment"
+        tools:layout="@layout/fragment_register"
+        android:label="Register">
+        <action
+            android:id="@+id/action_to_otpFragment"
+            app:destination="@id/otpFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/otpFragment"
+        android:name="com.png.wolibapracticaltask.presentation.registration.fragment.OtpFragment"
+        tools:layout="@layout/fragment_otp"
+        android:label="Verify OTP">
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.png.wolibapracticaltask.presentation.registration.fragment.ProfileFragment"
+        tools:layout="@layout/fragment_profile"
+        android:label="Profile Info">
+        <action
+            android:id="@+id/action_to_interestFragment"
+            app:destination="@id/interestFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interestFragment"
+        android:name="com.png.wolibapracticaltask.presentation.registration.fragment.InterestFragment"
+        android:label="Select Interests">
+        <action
+            android:id="@+id/action_to_wellbeingFragment"
+            app:destination="@id/wellbeingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/wellbeingFragment"
+        android:name="com.png.wolibapracticaltask.presentation.registration.fragment.WellbeingFragment"
+        android:label="Wellbeing Pillars">
+        <action
+            android:id="@+id/action_to_completeFragment"
+            app:destination="@id/completeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/completeFragment"
+        android:name="com.png.wolibapracticaltask.presentation.registration.fragment.CompleteFragment"
+        android:label="Registration Complete" />
+</navigation>
