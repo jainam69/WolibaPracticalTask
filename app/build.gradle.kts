@@ -56,4 +56,7 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.flexbox)
 
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+
 }

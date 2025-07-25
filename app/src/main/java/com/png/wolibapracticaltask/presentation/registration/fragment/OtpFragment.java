@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,9 +20,21 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.png.wolibapracticaltask.R;
+import com.png.wolibapracticaltask.data.model.request.SendOtpRequest;
+import com.png.wolibapracticaltask.data.remote.RetrofitInstance;
+import com.png.wolibapracticaltask.data.remote.api.AuthApi;
+import com.png.wolibapracticaltask.data.remote.datasource.RegistrationRemoteDataSource;
+import com.png.wolibapracticaltask.data.remote.datasource.RegistrationRemoteDataSourceImpl;
+import com.png.wolibapracticaltask.data.repository.RegistrationRepository;
+import com.png.wolibapracticaltask.data.repository.RegistrationRepositoryImpl;
 import com.png.wolibapracticaltask.databinding.FragmentOtpBinding;
+import com.png.wolibapracticaltask.domain.model.RegistrationData;
+import com.png.wolibapracticaltask.domain.usecase.SendOtpUseCase;
+import com.png.wolibapracticaltask.domain.usecase.VerifyOtpUseCase;
+import com.png.wolibapracticaltask.presentation.common.factory.VerifyOtpFactory;
+import com.png.wolibapracticaltask.presentation.registration.viewmodel.RegistrationViewModel;
+import com.png.wolibapracticaltask.presentation.registration.viewmodel.ValidationViewModel;
 import com.png.wolibapracticaltask.presentation.state.RegistrationStep;
-import com.png.wolibapracticaltask.presentation.viewmodel.RegistrationViewModel;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -30,9 +43,11 @@ import java.util.Map;
 public class OtpFragment extends Fragment {
 
     private FragmentOtpBinding binding;
-    private RegistrationViewModel viewModel;
+    private ValidationViewModel viewModel;
     private long mTimeLeftInMillis;
     private CountDownTimer countDownTimer;
+    RegistrationViewModel registrationViewModel;
+    RegistrationData data;
 
     @Nullable
     @Override
@@ -49,17 +64,35 @@ public class OtpFragment extends Fragment {
     private void actionListener() {
         binding.txtTimer.setOnClickListener(view -> {
             if (getString(R.string.resend_otp).equals(binding.txtTimer.getText().toString())) {
-                binding.txtTimer.setTextColor(requireContext().getColor(R.color._184a61));
-                countDownTimer.start();
+                registrationViewModel.sendOtp(new SendOtpRequest(data.email));
             }
         });
     }
 
     private void initView() {
-        viewModel = new ViewModelProvider(requireActivity()).get(RegistrationViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ValidationViewModel.class);
         viewModel.setCurrentStep(RegistrationStep.OTP);
+        data = viewModel.getRegistrationData();
 
-        countDownTimer = new CountDownTimer(10000, 1000) {
+        AuthApi api = RetrofitInstance.getInstance().create(AuthApi.class);
+        RegistrationRemoteDataSource remote = new RegistrationRemoteDataSourceImpl(api);
+        RegistrationRepository registrationRepository = new RegistrationRepositoryImpl(remote);
+        SendOtpUseCase sendOtpUseCase = new SendOtpUseCase(registrationRepository);
+        VerifyOtpUseCase verifyOtpUseCase = new VerifyOtpUseCase(registrationRepository);
+        VerifyOtpFactory factory = new VerifyOtpFactory(sendOtpUseCase, verifyOtpUseCase);
+        registrationViewModel = new ViewModelProvider(this, factory).get(RegistrationViewModel.class);
+
+        registrationViewModel.sendOtpResponse().observe(getViewLifecycleOwner(), response -> {
+            if (response != null && response.status.equals("success")) {
+                binding.txtTimer.setTextColor(requireContext().getColor(R.color._184a61));
+                countDownTimer.start();
+                Toast.makeText(requireActivity(), response.data.message, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(requireActivity(), "Bad Request", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        countDownTimer = new CountDownTimer(180000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 mTimeLeftInMillis = millisUntilFinished;
@@ -72,7 +105,6 @@ public class OtpFragment extends Fragment {
                 binding.txtTimer.setTextColor(requireContext().getColor(R.color.froly));
             }
         }.start();
-
     }
 
     private void otpInputHandle() {

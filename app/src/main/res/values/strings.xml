@@ -25,4 +25,14 @@
     <string name="contact_no">Contact number</string>
     <string name="enter_contact_no">Enter contact number</string>
     <string name="select_all_wellness_interests_that_apply_at_least_one_is_required">Select all wellness interests that apply — at least one is required.</string>
+    <string name="select_any_3_well_being">Select any 3 well-being pillars goal you want to achieve</string>
+    <string name="welcome_to_woliba">Welcome to Woliba!</string>
+    <string name="first_step"><![CDATA[You’ve just taken the first step toward a healthier, more energized you! Dive into fun challenges, set meaningful goals, and discover habits that stick. Your wellness journey starts right now — let’s make it amazing!]]></string>
+    <string name="let_s_get_started">Let’s Get Started</string>
+    <string name="verify">Verify</string>
+    <string name="enter_email">Please enter email</string>
+    <string name="enter_valid_email">Please enter valid email</string>
+    <string name="email_not_invited">This email ID has not been invited by your company admin. Please contact your admin for access.</string>
+    <string name="verified">Verified</string>
+    <string name="submit">Submit</string>
 </resources>

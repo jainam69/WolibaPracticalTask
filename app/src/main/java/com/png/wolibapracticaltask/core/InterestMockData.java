@@ -1,17 +1,15 @@
 package com.png.wolibapracticaltask.core;
 
-import com.png.wolibapracticaltask.data.model.InterestType;
-import com.png.wolibapracticaltask.data.model.Interest;
+import com.png.wolibapracticaltask.domain.model.InterestType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class InterestMockData {
 
     public static ArrayList<InterestType> getMockCategoryList() {
         ArrayList<InterestType> categories = new ArrayList<>();
 
-        categories.add(new InterestType("Individual Sports", new ArrayList<>(Arrays.asList(
+        /*categories.add(new InterestType("Individual Sports", new ArrayList<>(Arrays.asList(
                 new Interest("Aerobics"),
                 new Interest("Ballet"),
                 new Interest("Calisthenics"),
@@ -65,7 +63,7 @@ public class InterestMockData {
                 new Interest("Climbing"),
                 new Interest("Archery"),
                 new Interest("Horse Riding")
-        ))));
+        ))));*/
 
         return categories;
     }

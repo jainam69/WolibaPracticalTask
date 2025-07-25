@@ -1,4 +1,4 @@
-package com.png.wolibapracticaltask.data.model;
+package com.png.wolibapracticaltask.domain.model;
 
 import java.util.ArrayList;
 

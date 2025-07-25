@@ -10,17 +10,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.png.wolibapracticaltask.R;
-import com.png.wolibapracticaltask.data.model.InterestType;
+import com.png.wolibapracticaltask.domain.model.Interest;
+import com.png.wolibapracticaltask.domain.model.InterestType;
 import com.png.wolibapracticaltask.databinding.ItemInterestTypeBinding;
 
 import java.util.ArrayList;
 
-public class InterestTypeAdapter extends RecyclerView.Adapter<InterestTypeAdapter.ViewHolder> {
+public class InterestTypeAdapter extends RecyclerView.Adapter<InterestTypeAdapter.ViewHolder> implements InterestAdapter.InterestListener {
 
     private final ArrayList<InterestType> interestTypeList;
+    private final InterestTypeListener listener;
 
-    public InterestTypeAdapter(ArrayList<InterestType> interestTypeList) {
+    public InterestTypeAdapter(ArrayList<InterestType> interestTypeList, InterestTypeListener listener) {
         this.interestTypeList = interestTypeList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -36,7 +39,7 @@ public class InterestTypeAdapter extends RecyclerView.Adapter<InterestTypeAdapte
 
         // Setup child RecyclerView
         holder.binding.rvChips.setLayoutManager(new FlexboxLayoutManager(holder.itemView.getContext()));
-        holder.binding.rvChips.setAdapter(new InterestAdapter(interestTypeList.get(position).getInterests()));
+        holder.binding.rvChips.setAdapter(new InterestAdapter(interestTypeList.get(position).getInterests(),this, holder.itemView.getContext()));
 
         holder.binding.tvInterestType.setOnClickListener(v -> {
             interestTypeList.get(position).setExpanded(!interestTypeList.get(position).isExpanded());
@@ -54,6 +57,11 @@ public class InterestTypeAdapter extends RecyclerView.Adapter<InterestTypeAdapte
         return interestTypeList.size();
     }
 
+    @Override
+    public void onItemClick(ArrayList<Interest> interestsItems) {
+        listener.onItemClick(interestsItems);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ItemInterestTypeBinding binding;
 
@@ -61,5 +69,9 @@ public class InterestTypeAdapter extends RecyclerView.Adapter<InterestTypeAdapte
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+
+    public interface InterestTypeListener {
+        void onItemClick(ArrayList<Interest> interestsItems);
     }
 }

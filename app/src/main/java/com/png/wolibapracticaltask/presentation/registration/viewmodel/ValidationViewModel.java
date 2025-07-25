@@ -1,17 +1,21 @@
-package com.png.wolibapracticaltask.presentation.viewmodel;
+package com.png.wolibapracticaltask.presentation.registration.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.png.wolibapracticaltask.domain.model.RegistrationData;
 import com.png.wolibapracticaltask.presentation.state.RegistrationStep;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class RegistrationViewModel extends ViewModel {
+public class ValidationViewModel extends ViewModel {
     private final MutableLiveData<RegistrationStep> currentStep = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isCurrentStepValid = new MutableLiveData<>(false);
+    private final RegistrationData registrationData = new RegistrationData();
 
     // Call this to update which step you're on
     public void setCurrentStep(RegistrationStep step) {
@@ -26,6 +30,10 @@ public class RegistrationViewModel extends ViewModel {
         return isCurrentStepValid;
     }
 
+    public RegistrationData getRegistrationData() {
+        return registrationData;
+    }
+
     // Fragments call this when their fields change
     public void validate(RegistrationStep step, Map<String, String> inputs) {
         boolean isValid = false;
@@ -36,15 +44,24 @@ public class RegistrationViewModel extends ViewModel {
                 String lastName = inputs.get("lastName");
                 String email = inputs.get("email");
                 String isEmailValid = inputs.get("isEmailValid");
+
                 isValid = email != null && email.contains("@") &&
                         !(firstName != null && firstName.isEmpty()) &&
                         !(lastName != null && lastName.isEmpty()) &&
                         Objects.equals(isEmailValid, "true");
+                if (isValid) {
+                    registrationData.firstName = firstName;
+                    registrationData.lastName = lastName;
+                    registrationData.email = email;
+                }
                 break;
 
             case OTP:
                 String otp = inputs.get("otp");
                 isValid = otp != null && otp.length() == 6;
+                if (isValid) {
+                    registrationData.otp = otp;
+                }
                 break;
 
             case PROFILE:
@@ -59,8 +76,34 @@ public class RegistrationViewModel extends ViewModel {
                         !(birthDay != null && birthDay.isEmpty()) &&
                         !(contactNo != null && contactNo.isEmpty()) &&
                         Objects.equals(isConditionValid, "true");
+                if (isValid) {
+                    registrationData.password = password;
+                    registrationData.confirmPassword = confirmPassword;
+                    registrationData.birthDay = birthDay;
+                    registrationData.contactNo = contactNo;
+                    registrationData.isConditionValid = true;
+                }
                 break;
 
+            case INTEREST:
+                String count = inputs.get("count");
+                isValid = Objects.equals(count, "3");
+                if (isValid) {
+                    String selected = inputs.get("interest"); // comma-separated
+                    List<String> abc =  Arrays.asList(selected.split(","));
+                    registrationData.selectedInterests = Arrays.asList(selected.split(","));
+                }
+                break;
+
+            case WELLBEING:
+                String wellbeingCount = inputs.get("count");
+                isValid = Objects.equals(wellbeingCount, "3");
+                if (isValid) {
+                    String selected = inputs.get("interest"); // comma-separated
+                    List<String> abc =  Arrays.asList(selected.split(","));
+                    registrationData.selectedWellbeingOptions = Arrays.asList(selected.split(","));
+                }
+                break;
             // Add cases for INTEREST, WELLBEING, etc.
 
             default:

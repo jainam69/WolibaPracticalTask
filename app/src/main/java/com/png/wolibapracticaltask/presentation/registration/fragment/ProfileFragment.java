@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.png.wolibapracticaltask.core.SimpleTextWatcher;
 import com.png.wolibapracticaltask.databinding.FragmentProfileBinding;
 import com.png.wolibapracticaltask.presentation.state.RegistrationStep;
-import com.png.wolibapracticaltask.presentation.viewmodel.RegistrationViewModel;
+import com.png.wolibapracticaltask.presentation.registration.viewmodel.ValidationViewModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-    private RegistrationViewModel viewModel;
+    private ValidationViewModel viewModel;
 
     @Nullable
     @Override
@@ -35,7 +35,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initView() {
-        viewModel = new ViewModelProvider(requireActivity()).get(RegistrationViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ValidationViewModel.class);
         viewModel.setCurrentStep(RegistrationStep.PROFILE);
 
         binding.chkPolicy.setOnCheckedChangeListener((compoundButton, b) -> {

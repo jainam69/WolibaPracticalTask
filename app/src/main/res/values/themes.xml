@@ -3,6 +3,7 @@
     <style name="Base.Theme.WolibaPracticalTask" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">@color/f8f8f8</item>
     </style>
 
     <style name="Theme.WolibaPracticalTask" parent="Base.Theme.WolibaPracticalTask" />

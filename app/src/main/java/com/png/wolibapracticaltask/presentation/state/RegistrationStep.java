@@ -7,5 +7,4 @@ public enum RegistrationStep {
     INTEREST,
     WELLBEING,
     COMPLETE,
-    WELCOME
 }

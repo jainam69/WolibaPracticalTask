@@ -8,7 +8,7 @@
 
         <variable
             name="interestType"
-            type="com.png.wolibapracticaltask.data.model.InterestType" />
+            type="com.png.wolibapracticaltask.domain.model.InterestType" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
