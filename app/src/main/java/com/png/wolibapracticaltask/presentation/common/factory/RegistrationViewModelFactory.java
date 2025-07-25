@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.png.wolibapracticaltask.domain.usecase.RegistrationUseCase;
 import com.png.wolibapracticaltask.domain.usecase.SendOtpUseCase;
 import com.png.wolibapracticaltask.domain.usecase.VerifyEmailUseCase;
 import com.png.wolibapracticaltask.domain.usecase.VerifyOtpUseCase;
@@ -17,22 +18,24 @@ public class RegistrationViewModelFactory implements ViewModelProvider.Factory {
     private final VerifyOtpUseCase verifyOtpUseCase;
     private final WellbeingInterestUseCase wellbeingInterestUseCase;
     private final WellbeingPillarUseCase wellbeingPillarUseCase;
+    private final RegistrationUseCase registrationUseCase;
 
     public RegistrationViewModelFactory(SendOtpUseCase sendOtpUseCase, VerifyEmailUseCase verifyEmailUseCase,
                                         VerifyOtpUseCase verifyOtpUseCase, WellbeingInterestUseCase wellbeingInterestUseCase,
-                                        WellbeingPillarUseCase wellbeingPillarUseCase) {
+                                        WellbeingPillarUseCase wellbeingPillarUseCase, RegistrationUseCase registrationUseCase) {
         this.sendOtpUseCase = sendOtpUseCase;
         this.verifyEmailUseCase = verifyEmailUseCase;
         this.verifyOtpUseCase = verifyOtpUseCase;
         this.wellbeingInterestUseCase = wellbeingInterestUseCase;
         this.wellbeingPillarUseCase = wellbeingPillarUseCase;
+        this.registrationUseCase = registrationUseCase;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(RegistrationViewModel.class)) {
-            return (T) new RegistrationViewModel(sendOtpUseCase, verifyEmailUseCase, verifyOtpUseCase, wellbeingInterestUseCase, wellbeingPillarUseCase);
+            return (T) new RegistrationViewModel(sendOtpUseCase, verifyEmailUseCase, verifyOtpUseCase, wellbeingInterestUseCase, wellbeingPillarUseCase, registrationUseCase);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

@@ -20,12 +20,10 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.ViewHo
 
     private final ArrayList<Interest> interestTypeList;
     private final InterestListener listener;
-    private final Context context;
 
-    public InterestAdapter(ArrayList<Interest> interestTypeList, InterestListener listener, Context context) {
+    public InterestAdapter(ArrayList<Interest> interestTypeList, InterestListener listener) {
         this.interestTypeList = interestTypeList;
         this.listener = listener;
-        this.context = context;
     }
 
     @NonNull

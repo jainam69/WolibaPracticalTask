@@ -37,7 +37,7 @@ public class RegisterFragment extends Fragment {
     private FragmentRegisterBinding binding;
     private ValidationViewModel viewModel;
     RegistrationViewModel registrationViewModel;
-    public String isEmailVerify;
+    public String isEmailVerify = "false";
 
     @Nullable
     @Override
@@ -62,23 +62,31 @@ public class RegisterFragment extends Fragment {
         registrationViewModel = new ViewModelProvider(this, factory).get(RegistrationViewModel.class);
 
         registrationViewModel.getVerifyEmailResponse().observe(getViewLifecycleOwner(), response -> {
-            isEmailVerify = response.data.is_verified.toString();
-            if (response.status.equals("success") && !response.data.is_verified) {
-                binding.txtEmailError.setVisibility(View.VISIBLE);
-                binding.txtEmailError.setText(getString(R.string.email_not_invited));
+            if (response != null) {
+                if (response.status.equals("failed")) {
+                    Toast.makeText(requireContext(), response.error, Toast.LENGTH_LONG).show();
+                } else if (response.status.equals("success") && !response.data.is_verified) {
+                    isEmailVerify = response.data.is_verified.toString();
+                    binding.txtEmailError.setVisibility(View.VISIBLE);
+                    binding.txtEmailError.setText(getString(R.string.email_not_invited));
+                } else {
+                    isEmailVerify = response.data.is_verified.toString();
+                    Map<String, String> inputs = new HashMap<>();
+                    inputs.put("firstName", binding.etFirstName.getText().toString());
+                    inputs.put("lastName", binding.etLastName.getText().toString());
+                    inputs.put("email", binding.etEmail.getText().toString());
+                    inputs.put("isEmailValid", isEmailVerify);
+                    viewModel.validate(RegistrationStep.REGISTER, inputs);
+                    binding.etEmail.setEnabled(false);
+                    binding.txtEmailError.setVisibility(View.GONE);
+                    binding.tvCompanyName.setVisibility(View.VISIBLE);
+                    binding.etCompanyName.setVisibility(View.VISIBLE);
+                    binding.etCompanyName.setText(response.data.company_name);
+                    binding.txtVerify.setText(getString(R.string.verified));
+                    binding.txtVerify.setTextColor(requireContext().getColor(R.color._75b084));
+                }
             } else {
-                Map<String, String> inputs = new HashMap<>();
-                inputs.put("firstName", binding.etFirstName.getText().toString());
-                inputs.put("lastName", binding.etLastName.getText().toString());
-                inputs.put("email", binding.etEmail.getText().toString());
-                inputs.put("isEmailValid", isEmailVerify);
-                viewModel.validate(RegistrationStep.REGISTER, inputs);
-                binding.txtEmailError.setVisibility(View.GONE);
-                binding.tvCompanyName.setVisibility(View.VISIBLE);
-                binding.etCompanyName.setVisibility(View.VISIBLE);
-                binding.etCompanyName.setText(response.data.company_name);
-                binding.txtVerify.setText(getString(R.string.verified));
-                binding.txtVerify.setTextColor(requireContext().getColor(R.color._75b084));
+                Toast.makeText(requireContext(), "Bad Request", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -98,12 +106,15 @@ public class RegisterFragment extends Fragment {
 
     private void actionListener() {
         binding.txtVerify.setOnClickListener(view -> {
-            if (binding.etEmail.getText().toString().trim().isBlank()) {
-                Toast.makeText(getContext(), getString(R.string.enter_email), Toast.LENGTH_SHORT).show();
-            } else if (!Common.isValidEmail(binding.etEmail.getText().toString().trim())) {
-                Toast.makeText(getContext(), getString(R.string.enter_valid_email), Toast.LENGTH_SHORT).show();
-            } else {
-                registrationViewModel.verifyEmail(new SendOtpRequest(binding.etEmail.getText().toString()));
+            if (binding.txtVerify.getText().toString().equals(getString(R.string.verify))) {
+                if (binding.etEmail.getText().toString().trim().isBlank()) {
+                    Toast.makeText(getContext(), getString(R.string.enter_email), Toast.LENGTH_SHORT).show();
+                } else if (!Common.isValidEmail(binding.etEmail.getText().toString().trim())) {
+                    Toast.makeText(getContext(), getString(R.string.enter_valid_email), Toast.LENGTH_SHORT).show();
+                } else {
+                    Common.hideKeyPad(requireContext(), binding.txtVerify);
+                    registrationViewModel.verifyEmail(new SendOtpRequest(binding.etEmail.getText().toString()));
+                }
             }
         });
     }

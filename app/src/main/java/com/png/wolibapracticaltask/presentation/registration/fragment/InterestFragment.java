@@ -98,11 +98,16 @@ public class InterestFragment extends Fragment implements InterestTypeAdapter.In
     public void onItemClick(ArrayList<Interest> interestsItems) {
         StringBuilder interest = new StringBuilder();
         for (Interest item : interestsItems) {
-            interest.append(item.getName()).append(",");
+            interest.append(item.getId()).append(",");
         }
         Map<String, String> inputs = new HashMap<>();
-        inputs.put("interest", interest.substring(0, interest.length() - 1));
-        inputs.put("count", String.valueOf(interestsItems.size()));
+        if (!interestsItems.isEmpty()) {
+            inputs.put("interest", interest.substring(0, interest.length() - 1));
+            inputs.put("count", String.valueOf(interestsItems.size()));
+        } else {
+            inputs.put("count", "");
+        }
+
         viewModel.validate(RegistrationStep.INTEREST, inputs);
     }
 }

@@ -1,13 +1,16 @@
 package com.png.wolibapracticaltask.data.remote.api;
 
+import com.png.wolibapracticaltask.data.model.request.RegistrationRequest;
 import com.png.wolibapracticaltask.data.model.request.SendOtpRequest;
 import com.png.wolibapracticaltask.data.model.request.VerifyOtpRequest;
 import com.png.wolibapracticaltask.data.model.response.ApiResponse;
 import com.png.wolibapracticaltask.data.model.response.InterestResponse;
+import com.png.wolibapracticaltask.data.model.response.RegistrationResponse;
 import com.png.wolibapracticaltask.data.model.response.SendOtpResponse;
 import com.png.wolibapracticaltask.data.model.response.VerifyEmailResponse;
 import com.png.wolibapracticaltask.data.model.response.WellbeingItem;
 import com.png.wolibapracticaltask.data.remote.ApiConstants;
+import com.png.wolibapracticaltask.domain.model.RegistrationData;
 
 import java.util.ArrayList;
 
@@ -32,5 +35,7 @@ public interface AuthApi {
     @GET(ApiConstants.WELLBEING_PILLARS)
     Call<ApiResponse<ArrayList<WellbeingItem>>> wellbeingPillars();
 
+    @POST(ApiConstants.USER_REGISTRATION)
+    Call<ApiResponse<RegistrationResponse>> userRegistration(@Body RegistrationRequest request);
 
 }

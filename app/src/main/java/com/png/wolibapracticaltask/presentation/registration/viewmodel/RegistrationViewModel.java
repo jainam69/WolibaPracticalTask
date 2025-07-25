@@ -1,17 +1,25 @@
 package com.png.wolibapracticaltask.presentation.registration.viewmodel;
 
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.png.wolibapracticaltask.data.model.request.RegistrationRequest;
 import com.png.wolibapracticaltask.data.model.request.VerifyOtpRequest;
 import com.png.wolibapracticaltask.data.model.response.ApiResponse;
 import com.png.wolibapracticaltask.data.model.request.SendOtpRequest;
 import com.png.wolibapracticaltask.data.model.response.InterestResponse;
+import com.png.wolibapracticaltask.data.model.response.RegistrationResponse;
 import com.png.wolibapracticaltask.data.model.response.SendOtpResponse;
 import com.png.wolibapracticaltask.data.model.response.VerifyEmailResponse;
 import com.png.wolibapracticaltask.data.model.response.WellbeingItem;
+import com.png.wolibapracticaltask.data.remote.ErrorData;
+import com.png.wolibapracticaltask.domain.usecase.RegistrationUseCase;
 import com.png.wolibapracticaltask.domain.usecase.SendOtpUseCase;
 import com.png.wolibapracticaltask.domain.usecase.VerifyEmailUseCase;
 import com.png.wolibapracticaltask.domain.usecase.VerifyOtpUseCase;
@@ -19,7 +27,9 @@ import com.png.wolibapracticaltask.domain.usecase.WellbeingInterestUseCase;
 import com.png.wolibapracticaltask.domain.usecase.WellbeingPillarUseCase;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,11 +40,13 @@ public class RegistrationViewModel extends ViewModel {
     private VerifyOtpUseCase verifyOtpUseCase;
     private WellbeingInterestUseCase wellbeingInterestUseCase;
     private WellbeingPillarUseCase wellbeingPillarUseCase;
+    private RegistrationUseCase registrationUseCase;
     private final MutableLiveData<ApiResponse<SendOtpResponse>> sendOtpResponse = new MutableLiveData<>();
     private final MutableLiveData<ApiResponse<VerifyEmailResponse>> verifyEmailResponse = new MutableLiveData<>();
     private final MutableLiveData<ApiResponse<ArrayList<String>>> verifyOtpResponse = new MutableLiveData<>();
     private final MutableLiveData<ApiResponse<ArrayList<ArrayList<InterestResponse>>>> interestResponse = new MutableLiveData<>();
     private final MutableLiveData<ApiResponse<ArrayList<WellbeingItem>>> wellbeingPillars = new MutableLiveData<>();
+    private final MutableLiveData<ApiResponse<RegistrationResponse>> registrationResponse = new MutableLiveData<>();
 
     public LiveData<ApiResponse<SendOtpResponse>> sendOtpResponse() {
         return sendOtpResponse;
@@ -56,21 +68,26 @@ public class RegistrationViewModel extends ViewModel {
         return wellbeingPillars;
     }
 
+    public LiveData<ApiResponse<RegistrationResponse>> getRegistrationUserResponse() {
+        return registrationResponse;
+    }
+
     public RegistrationViewModel(SendOtpUseCase sendOtpUseCase, VerifyEmailUseCase verifyEmailUseCase,
                                  VerifyOtpUseCase verifyOtpUseCase, WellbeingInterestUseCase wellbeingInterestUseCase,
-                                 WellbeingPillarUseCase wellbeingPillarUseCase) {
+                                 WellbeingPillarUseCase wellbeingPillarUseCase, RegistrationUseCase registrationUseCase) {
         this.sendOtpUseCase = sendOtpUseCase;
         this.verifyEmailUseCase = verifyEmailUseCase;
         this.verifyOtpUseCase = verifyOtpUseCase;
         this.wellbeingInterestUseCase = wellbeingInterestUseCase;
         this.wellbeingPillarUseCase = wellbeingPillarUseCase;
+        this.registrationUseCase = registrationUseCase;
     }
 
     public RegistrationViewModel(VerifyEmailUseCase verifyEmailUseCase) {
         this.verifyEmailUseCase = verifyEmailUseCase;
     }
 
-    public RegistrationViewModel(SendOtpUseCase sendOtpUseCase,VerifyOtpUseCase verifyOtpUseCase) {
+    public RegistrationViewModel(SendOtpUseCase sendOtpUseCase, VerifyOtpUseCase verifyOtpUseCase) {
         this.verifyOtpUseCase = verifyOtpUseCase;
         this.sendOtpUseCase = sendOtpUseCase;
     }
@@ -87,7 +104,19 @@ public class RegistrationViewModel extends ViewModel {
         verifyEmailUseCase.execute(request).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<VerifyEmailResponse>> call, @NonNull Response<ApiResponse<VerifyEmailResponse>> response) {
-                verifyEmailResponse.setValue(response.body());
+                if (response.isSuccessful()) {
+                    verifyEmailResponse.setValue(response.body());
+                } else {
+                    Gson gson = new Gson();
+                    ApiResponse<ErrorData> errorResponse = gson.fromJson(
+                            Objects.requireNonNull(response.errorBody()).charStream(),
+                            TypeToken.getParameterized(ApiResponse.class, ErrorData.class).getType()
+                    );
+                    ApiResponse<VerifyEmailResponse> error = new ApiResponse<>();
+                    error.status = "failed";
+                    error.error = errorResponse.data.getMessage();
+                    verifyEmailResponse.setValue(error);
+                }
             }
 
             @Override
@@ -104,7 +133,19 @@ public class RegistrationViewModel extends ViewModel {
         sendOtpUseCase.execute(request).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<SendOtpResponse>> call, @NonNull Response<ApiResponse<SendOtpResponse>> response) {
-                sendOtpResponse.setValue(response.body());
+                if (response.isSuccessful()) {
+                    sendOtpResponse.setValue(response.body());
+                } else {
+                    Gson gson = new Gson();
+                    ApiResponse<ErrorData> errorResponse = gson.fromJson(
+                            Objects.requireNonNull(response.errorBody()).charStream(),
+                            TypeToken.getParameterized(ApiResponse.class, ErrorData.class).getType()
+                    );
+                    ApiResponse<SendOtpResponse> error = new ApiResponse<>();
+                    error.status = "failed";
+                    error.error = errorResponse.data.getMessage();
+                    sendOtpResponse.setValue(error);
+                }
             }
 
             @Override
@@ -121,7 +162,19 @@ public class RegistrationViewModel extends ViewModel {
         verifyOtpUseCase.execute(request).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<ArrayList<String>>> call, @NonNull Response<ApiResponse<ArrayList<String>>> response) {
-                verifyOtpResponse.setValue(response.body());
+                if (response.isSuccessful()) {
+                    verifyOtpResponse.setValue(response.body());
+                } else {
+                    Gson gson = new Gson();
+                    ApiResponse<ErrorData> errorResponse = gson.fromJson(
+                            Objects.requireNonNull(response.errorBody()).charStream(),
+                            TypeToken.getParameterized(ApiResponse.class, ErrorData.class).getType()
+                    );
+                    ApiResponse<ArrayList<String>> error = new ApiResponse<>();
+                    error.status = "failed";
+                    error.error = errorResponse.data.getMessage();
+                    verifyOtpResponse.setValue(error);
+                }
             }
 
             @Override
@@ -164,6 +217,35 @@ public class RegistrationViewModel extends ViewModel {
                 error.status = "failed";
                 error.error = t.getMessage();
                 wellbeingPillars.setValue(error);
+            }
+        });
+    }
+
+    public void getRegistrationUser(RegistrationRequest request) {
+        registrationUseCase.execute(request).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<RegistrationResponse>> call, @NonNull Response<ApiResponse<RegistrationResponse>> response) {
+                if (response.isSuccessful()) {
+                    registrationResponse.setValue(response.body());
+                } else {
+                    Gson gson = new Gson();
+                    ApiResponse<ErrorData> errorResponse = gson.fromJson(
+                            Objects.requireNonNull(response.errorBody()).charStream(),
+                            TypeToken.getParameterized(ApiResponse.class, ErrorData.class).getType()
+                    );
+                    ApiResponse<RegistrationResponse> error = new ApiResponse<>();
+                    error.status = "failed";
+                    error.error = errorResponse.data.getMessage();
+                    registrationResponse.setValue(error);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<RegistrationResponse>> call, @NonNull Throwable t) {
+                ApiResponse<RegistrationResponse> error = new ApiResponse<>();
+                error.status = "failed";
+                error.error = t.getMessage();
+                registrationResponse.setValue(error);
             }
         });
     }

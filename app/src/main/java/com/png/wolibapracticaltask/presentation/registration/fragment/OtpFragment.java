@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.png.wolibapracticaltask.R;
+import com.png.wolibapracticaltask.core.common.Common;
 import com.png.wolibapracticaltask.data.model.request.SendOtpRequest;
 import com.png.wolibapracticaltask.data.remote.RetrofitInstance;
 import com.png.wolibapracticaltask.data.remote.api.AuthApi;
@@ -73,6 +74,14 @@ public class OtpFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(ValidationViewModel.class);
         viewModel.setCurrentStep(RegistrationStep.OTP);
         data = viewModel.getRegistrationData();
+
+        viewModel.isOTPValid().observe(getViewLifecycleOwner(), isValid -> {
+            if (!isValid) {
+                binding.txtOtpError.setVisibility(View.VISIBLE);
+            } else {
+                binding.txtOtpError.setVisibility(View.GONE);
+            }
+        });
 
         AuthApi api = RetrofitInstance.getInstance().create(AuthApi.class);
         RegistrationRemoteDataSource remote = new RegistrationRemoteDataSourceImpl(api);
@@ -183,7 +192,7 @@ public class OtpFragment extends Fragment {
             }
 
             if (currentView.getId() == R.id.edtRegisterOtp6 && text.length() == 1) {
-                hideKeyPad(context, currentView);
+                Common.hideKeyPad(context, currentView);
             }
 
             Activity activity = (Activity) context;
@@ -216,13 +225,6 @@ public class OtpFragment extends Fragment {
         }
     }
 
-    public static void hideKeyPad(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
     private void updateCountDownText() {
         long minutes = (mTimeLeftInMillis / 1000) / 60;
         long seconds = (mTimeLeftInMillis / 1000) % 60;
@@ -234,6 +236,11 @@ public class OtpFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Cancel timer to avoid calling UI on null view
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
         binding = null; // Avoid memory leaks
     }
 }

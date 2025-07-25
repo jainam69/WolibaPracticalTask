@@ -14,12 +14,16 @@ import java.util.Objects;
 
 public class ValidationViewModel extends ViewModel {
     private final MutableLiveData<RegistrationStep> currentStep = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isOtpValid = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isCurrentStepValid = new MutableLiveData<>(false);
     private final RegistrationData registrationData = new RegistrationData();
 
-    // Call this to update which step you're on
     public void setCurrentStep(RegistrationStep step) {
         currentStep.setValue(step);
+    }
+
+    public void setOTPValid(boolean step) {
+        isOtpValid.setValue(step);
     }
 
     public LiveData<RegistrationStep> getCurrentStep() {
@@ -28,6 +32,10 @@ public class ValidationViewModel extends ViewModel {
 
     public LiveData<Boolean> isCurrentStepValid() {
         return isCurrentStepValid;
+    }
+
+    public LiveData<Boolean> isOTPValid() {
+        return isOtpValid;
     }
 
     public RegistrationData getRegistrationData() {
@@ -87,11 +95,13 @@ public class ValidationViewModel extends ViewModel {
 
             case INTEREST:
                 String count = inputs.get("count");
-                isValid = Objects.equals(count, "3");
+                isValid = !Objects.equals(count, "");
                 if (isValid) {
-                    String selected = inputs.get("interest"); // comma-separated
-                    List<String> abc =  Arrays.asList(selected.split(","));
-                    registrationData.selectedInterests = Arrays.asList(selected.split(","));
+                    String selected = inputs.get("interest");
+                    registrationData.selectedInterests = Arrays.stream(selected.split(","))
+                            .map(String::trim)
+                            .mapToInt(Integer::parseInt)
+                            .toArray();
                 }
                 break;
 
@@ -99,12 +109,13 @@ public class ValidationViewModel extends ViewModel {
                 String wellbeingCount = inputs.get("count");
                 isValid = Objects.equals(wellbeingCount, "3");
                 if (isValid) {
-                    String selected = inputs.get("interest"); // comma-separated
-                    List<String> abc =  Arrays.asList(selected.split(","));
-                    registrationData.selectedWellbeingOptions = Arrays.asList(selected.split(","));
+                    String selected = inputs.get("wellbeingItem");
+                    registrationData.selectedWellbeingOptions = Arrays.stream(selected.split(","))
+                            .map(String::trim)
+                            .mapToInt(Integer::parseInt)
+                            .toArray();
                 }
                 break;
-            // Add cases for INTEREST, WELLBEING, etc.
 
             default:
                 isValid = true;

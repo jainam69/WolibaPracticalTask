@@ -1,6 +1,9 @@
 package com.png.wolibapracticaltask.presentation.registration.fragment;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +19,9 @@ import com.png.wolibapracticaltask.databinding.FragmentProfileBinding;
 import com.png.wolibapracticaltask.presentation.state.RegistrationStep;
 import com.png.wolibapracticaltask.presentation.registration.viewmodel.ValidationViewModel;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ProfileFragment extends Fragment {
@@ -30,8 +35,40 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
 
         initView();
+        actionListener();
 
         return binding.getRoot();
+    }
+
+    private void actionListener() {
+        binding.etBirthDay.setInputType(InputType.TYPE_NULL); // Disable keyboard
+
+        binding.etBirthDay.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+
+            // Calculate max date = today - 13 years
+            Calendar maxDate = Calendar.getInstance();
+            maxDate.add(Calendar.YEAR, -18);
+
+            // Calculate min date = today - 100 years
+            Calendar minDate = Calendar.getInstance();
+            minDate.add(Calendar.YEAR, -100);
+
+            DatePickerDialog datePicker = new DatePickerDialog(requireContext(),
+                    (view, year, month, dayOfMonth) -> {
+                        String date = String.format(Locale.US, "%02d/%02d/%04d", month + 1, dayOfMonth, year);
+                        binding.etBirthDay.setText(date);
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+
+            // Set limits
+            datePicker.getDatePicker().setMinDate(minDate.getTimeInMillis());
+            datePicker.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
+            datePicker.show();
+        });
     }
 
     private void initView() {

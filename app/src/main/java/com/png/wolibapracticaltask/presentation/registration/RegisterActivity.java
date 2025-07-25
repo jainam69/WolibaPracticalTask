@@ -1,18 +1,25 @@
 package com.png.wolibapracticaltask.presentation.registration;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.png.wolibapracticaltask.R;
+import com.png.wolibapracticaltask.core.common.Common;
+import com.png.wolibapracticaltask.data.model.request.RegistrationRequest;
 import com.png.wolibapracticaltask.data.model.request.SendOtpRequest;
 import com.png.wolibapracticaltask.data.model.request.VerifyOtpRequest;
 import com.png.wolibapracticaltask.data.remote.RetrofitInstance;
@@ -23,6 +30,7 @@ import com.png.wolibapracticaltask.data.repository.RegistrationRepository;
 import com.png.wolibapracticaltask.data.repository.RegistrationRepositoryImpl;
 import com.png.wolibapracticaltask.databinding.ActivityRegistrationBinding;
 import com.png.wolibapracticaltask.domain.model.RegistrationData;
+import com.png.wolibapracticaltask.domain.usecase.RegistrationUseCase;
 import com.png.wolibapracticaltask.domain.usecase.SendOtpUseCase;
 import com.png.wolibapracticaltask.domain.usecase.VerifyEmailUseCase;
 import com.png.wolibapracticaltask.domain.usecase.VerifyOtpUseCase;
@@ -32,6 +40,7 @@ import com.png.wolibapracticaltask.presentation.common.factory.RegistrationViewM
 import com.png.wolibapracticaltask.presentation.registration.viewmodel.RegistrationViewModel;
 import com.png.wolibapracticaltask.presentation.registration.viewmodel.ValidationViewModel;
 import com.png.wolibapracticaltask.presentation.state.RegistrationStep;
+import com.png.wolibapracticaltask.presentation.welcome.WelcomeActivity;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -48,14 +57,18 @@ public class RegisterActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         initView();
         actionListener();
     }
 
     private void initView() {
-        NavHostFragment navHostFragment = (NavHostFragment)
-                getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
         }
@@ -72,10 +85,13 @@ public class RegisterActivity extends AppCompatActivity {
         data = viewModel.getRegistrationData();
 
         registrationViewModel.sendOtpResponse().observe(this, response -> {
-            if (response != null && response.status.equals("success")) {
+            if (response.status.equals("failed")) {
+                Toast.makeText(this, response.error, Toast.LENGTH_LONG).show();
+            } else if (response.status.equals("success")) {
                 token = response.data.token;
                 navController.navigate(R.id.action_to_otpFragment);
                 binding.appCompatButton.setText(getString(R.string.submit));
+                binding.appCompatButton.setEnabled(false);
                 stepCount = RegistrationStep.OTP;
                 Toast.makeText(this, response.data.message, Toast.LENGTH_LONG).show();
             } else {
@@ -84,11 +100,28 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         registrationViewModel.getVerifyOtpResponse().observe(this, response -> {
-            if (response != null && response.status.equals("success")) {
+            if (response.status.equals("failed")) {
+                viewModel.setOTPValid(false);
+                Toast.makeText(this, response.error, Toast.LENGTH_LONG).show();
+            } else if (response.status.equals("success")) {
                 navController.navigate(R.id.action_to_profileFragment);
                 binding.appCompatButton.setText(getString(R.string.next));
+                binding.appCompatButton.setEnabled(false);
                 stepCount = RegistrationStep.PROFILE;
                 Toast.makeText(this, response.data.get(0), Toast.LENGTH_LONG).show();
+            } else {
+                viewModel.setOTPValid(false);
+                Toast.makeText(this, "Incorrect OTP", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        registrationViewModel.getRegistrationUserResponse().observe(this, response -> {
+            if (response.status.equals("failed")) {
+                Toast.makeText(this, response.error, Toast.LENGTH_LONG).show();
+            } else if (response.status.equals("success")) {
+                Intent intent = new Intent(this, WelcomeActivity.class);
+                startActivity(intent);
+                finish();
             } else {
                 Toast.makeText(this, "Bad Request", Toast.LENGTH_LONG).show();
             }
@@ -104,7 +137,8 @@ public class RegisterActivity extends AppCompatActivity {
         VerifyOtpUseCase verifyOtpUseCase = new VerifyOtpUseCase(registrationRepository);
         WellbeingInterestUseCase wellbeingInterestUseCase = new WellbeingInterestUseCase(registrationRepository);
         WellbeingPillarUseCase wellbeingPillarUseCase = new WellbeingPillarUseCase(registrationRepository);
-        return new RegistrationViewModelFactory(sendOtpUseCase, verifyEmailUseCase, verifyOtpUseCase, wellbeingInterestUseCase, wellbeingPillarUseCase);
+        RegistrationUseCase registrationUseCase = new RegistrationUseCase(registrationRepository);
+        return new RegistrationViewModelFactory(sendOtpUseCase, verifyEmailUseCase, verifyOtpUseCase, wellbeingInterestUseCase, wellbeingPillarUseCase, registrationUseCase);
     }
 
     private void actionListener() {
@@ -119,16 +153,24 @@ public class RegisterActivity extends AppCompatActivity {
                 case PROFILE:
                     navController.navigate(R.id.action_to_interestFragment);
                     binding.appCompatButton.setText(getString(R.string.next));
+                    binding.appCompatButton.setEnabled(false);
                     stepCount = RegistrationStep.INTEREST;
                     break;
                 case INTEREST:
                     navController.navigate(R.id.action_to_wellbeingFragment);
                     binding.appCompatButton.setText(getString(R.string.next));
+                    binding.appCompatButton.setEnabled(false);
                     stepCount = RegistrationStep.WELLBEING;
                     break;
                 case WELLBEING:
-                    binding.appCompatButton.setText(getString(R.string.next));
+                    binding.appCompatButton.setVisibility(View.GONE);
                     navController.navigate(R.id.action_to_completeFragment);
+                    stepCount = RegistrationStep.COMPLETE;
+                    registrationViewModel.getRegistrationUser(new RegistrationRequest(data.firstName,
+                            data.lastName, data.email, data.confirmPassword, "Asia/Kolkata", token,
+                            1, Common.convertDateToIso(data.birthDay), data.contactNo, 0,
+                            data.isConditionValid, data.selectedInterests, data.selectedWellbeingOptions)
+                    );
                     break;
             }
         });
