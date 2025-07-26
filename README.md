@@ -2,8 +2,6 @@
 
 This project does a User Registration.
 
----
-
 ## Screenshot
 
 <p float="left">
@@ -23,8 +21,6 @@ This project does a User Registration.
     <img src="assets/Screenshot_1753540649.png" width="200" height="400"/>
 </p>
 
----
-
 ## Steps
 
 - Step 1 — Register with Email & Password
@@ -34,8 +30,6 @@ This project does a User Registration.
 - Step 5 — Wellbeing Pillars
 - Step 6 — Registration Completion
 - Step 7 — Welcome screen
-
----
 
 ## Tech Stack
 
@@ -47,8 +41,6 @@ This project does a User Registration.
   - OkHttp
   - Glide
   - Flexbox
- 
----
 
 ## Setup Instructions
 
@@ -56,5 +48,14 @@ This project does a User Registration.
    ```bash
    git clone https://github.com/jainam69/WolibaPracticalTask.git
 
----
+2. Open in Android Studio
 
+    - Open the cloned project folder.
+
+3. Sync Gradle
+
+    - Android Studio should do this automatically. If not, click "Sync Project with Gradle Files".
+
+4. Run the app
+
+    - Use the green Run button, or connect a device/emulator and press Shift + F10.
