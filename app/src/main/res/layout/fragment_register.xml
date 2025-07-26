@@ -61,6 +61,7 @@
             android:background="@drawable/bg_edittext"
             android:hint="@string/enter_first_name"
             android:imeOptions="actionNext"
+            android:inputType="textCapSentences"
             android:padding="@dimen/_12dp"
             android:singleLine="true"
             android:textColor="@color/black"
@@ -71,6 +72,18 @@
             app:layout_constraintTop_toBottomOf="@id/tvFirstName" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtFirstNameError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10dp"
+            android:text="@string/please_enter_first_name"
+            android:textColor="@color/crimson_blush"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etFirstName" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvLastName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +92,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etFirstName" />
+            app:layout_constraintTop_toBottomOf="@id/txtFirstNameError" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/etLastName"
@@ -89,6 +102,7 @@
             android:background="@drawable/bg_edittext"
             android:hint="@string/enter_last_name"
             android:imeOptions="actionNext"
+            android:inputType="textCapSentences"
             android:padding="@dimen/_12dp"
             android:singleLine="true"
             android:textColor="@color/black"
@@ -99,6 +113,18 @@
             app:layout_constraintTop_toBottomOf="@id/tvLastName" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtLastNameError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10dp"
+            android:text="@string/please_enter_last_name"
+            android:textColor="@color/crimson_blush"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etLastName" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -107,7 +133,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etLastName" />
+            app:layout_constraintTop_toBottomOf="@id/txtLastNameError" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clEmail"
@@ -127,6 +153,7 @@
                 android:background="@android:color/transparent"
                 android:hint="@string/enter_work_email"
                 android:imeOptions="actionDone"
+                android:inputType="textEmailAddress"
                 android:padding="@dimen/_12dp"
                 android:singleLine="true"
                 android:textColor="@color/black"
@@ -155,9 +182,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10dp"
+            android:text="@string/email_not_invited"
             android:textColor="@color/crimson_blush"
             android:visibility="gone"
-            android:text="@string/email_not_invited"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/clEmail" />

@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="interest"
             type="com.png.wolibapracticaltask.domain.model.Interest" />
@@ -21,7 +19,6 @@
         android:focusable="true"
         android:padding="8dp">
 
-        <!-- Image -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivIcon"
             android:layout_width="20dp"
@@ -31,14 +28,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Text -->
         <TextView
             android:id="@+id/tvInterestName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5dp"
             android:text="@{interest.name}"
             android:textColor="@color/text_color_selector_interest"
-            android:textSize="14sp"
+            android:textSize="@dimen/_14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/ivIcon"

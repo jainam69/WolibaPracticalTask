@@ -4,8 +4,10 @@
     <string name="login_credentials">Login Credentials</string>
     <string name="first_name">First name</string>
     <string name="enter_first_name">Enter first name</string>
+    <string name="please_enter_first_name">Please enter first name</string>
     <string name="last_name">Last name</string>
     <string name="enter_last_name">Enter last name</string>
+    <string name="please_enter_last_name">Please enter last name</string>
     <string name="work_email">Work email</string>
     <string name="enter_work_email">Enter work email</string>
     <string name="company_name">Company Name</string>
@@ -18,12 +20,16 @@
     <string name="complete_your_profile">Complete Your Profile</string>
     <string name="password">Password</string>
     <string name="enter_password">Enter password</string>
+    <string name="please_enter_password">Please enter password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="enter_confirm_password">Enter confirm password</string>
+    <string name="please_enter_confirm_password">Please enter confirm password</string>
     <string name="birth_day">Birthday</string>
     <string name="mm_dd_yyyy">MM/DD/YYYY</string>
     <string name="contact_no">Contact number</string>
     <string name="enter_contact_no">Enter contact number</string>
+    <string name="please_enter_contact_no">Please enter contact number</string>
+    <string name="please_enter_valid_contact_no">Please enter valid contact number</string>
     <string name="select_all_wellness_interests_that_apply_at_least_one_is_required">Select all wellness interests that apply — at least one is required.</string>
     <string name="select_any_3_well_being">Select any 3 well-being pillars goal you want to achieve</string>
     <string name="welcome_to_woliba">Welcome to Woliba!</string>
@@ -32,7 +38,10 @@
     <string name="verify">Verify</string>
     <string name="enter_email">Please enter email</string>
     <string name="enter_valid_email">Please enter valid email</string>
+    <string name="password_not_match">Passwords do not match. Please re-enter.</string>
+    <string name="password_six_digit">Passwords should be at least 6 characters long.</string>
     <string name="email_not_invited">This email ID has not been invited by your company admin. Please contact your admin for access.</string>
     <string name="verified">Verified</string>
     <string name="submit">Submit</string>
+    <string name="agree_text">I agree to Woliba’s &lt;font color="#F37A65"&gt;Terms of Service&lt;/font&gt; and &lt;font color="#F37A65"&gt;Privacy Policy&lt;/font&gt;</string>
 </resources>

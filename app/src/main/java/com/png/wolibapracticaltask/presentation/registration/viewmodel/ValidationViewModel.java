@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.png.wolibapracticaltask.core.common.Common;
 import com.png.wolibapracticaltask.domain.model.RegistrationData;
 import com.png.wolibapracticaltask.presentation.state.RegistrationStep;
 
@@ -53,7 +54,7 @@ public class ValidationViewModel extends ViewModel {
                 String email = inputs.get("email");
                 String isEmailValid = inputs.get("isEmailValid");
 
-                isValid = email != null && email.contains("@") &&
+                isValid = Common.isValidEmail(email) &&
                         !(firstName != null && firstName.isEmpty()) &&
                         !(lastName != null && lastName.isEmpty()) &&
                         Objects.equals(isEmailValid, "true");
@@ -79,10 +80,12 @@ public class ValidationViewModel extends ViewModel {
                 String contactNo = inputs.get("contactNo");
                 String isConditionValid = inputs.get("isConditionValid");
                 isValid = !(password != null && password.isEmpty()) &&
+                        (password != null && password.length() == 6) &&
                         !(confirmPassword != null && confirmPassword.isEmpty()) &&
                         Objects.equals(password, confirmPassword) &&
                         !(birthDay != null && birthDay.isEmpty()) &&
                         !(contactNo != null && contactNo.isEmpty()) &&
+                        Objects.requireNonNull(contactNo).length() == 10 &&
                         Objects.equals(isConditionValid, "true");
                 if (isValid) {
                     registrationData.password = password;

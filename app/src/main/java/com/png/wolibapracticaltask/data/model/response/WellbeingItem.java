@@ -5,6 +5,8 @@ public class WellbeingItem {
     String pillar_title;
     String description;
     int is_active;
+    Integer badgeNumber;
+    private boolean isSelected;
 
     public WellbeingItem(int id, String pillar_title, String description, int is_active) {
         this.id = id;
@@ -29,11 +31,13 @@ public class WellbeingItem {
         return is_active;
     }
 
-    private boolean isSelected;
-
     public boolean isSelected() {
         return isSelected;
     }
+
+    public int getBadgeNumber() { return badgeNumber; }
+
+    public void setBadgeNumber(Integer badgeNumber) { this.badgeNumber = badgeNumber; }
 
     public void setSelected(boolean selected) {
         this.isSelected = selected;

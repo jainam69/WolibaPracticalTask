@@ -36,6 +36,18 @@ public class WellbeingAdapter extends RecyclerView.Adapter<WellbeingAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.binding.setItem(wellbeingList.get(position));
+
+        // Handle badge number display
+        if (wellbeingList.get(position).isSelected()) {
+            int badgeNumber = getBadgeNumberForItem(wellbeingList.get(position));
+            holder.binding.tvBadge.setText(String.valueOf(badgeNumber));
+            holder.binding.tvBadge.setVisibility(ViewGroup.VISIBLE);
+            holder.binding.checkbox.setVisibility(ViewGroup.INVISIBLE);
+        } else {
+            holder.binding.tvBadge.setVisibility(ViewGroup.GONE);
+            holder.binding.checkbox.setVisibility(ViewGroup.VISIBLE);
+        }
+
         holder.binding.setClickListener(v -> {
             if (!wellbeingList.get(position).isSelected()) {
                 int selectedCount = getSelectedCount();
@@ -45,8 +57,9 @@ public class WellbeingAdapter extends RecyclerView.Adapter<WellbeingAdapter.View
                 }
             }
             wellbeingList.get(position).setSelected(!wellbeingList.get(position).isSelected());
+            updateBadgeNumbers();
             getSelectedItems();
-            notifyItemChanged(position);
+            notifyDataSetChanged();
         });
 
         holder.binding.executePendingBindings();
@@ -71,6 +84,28 @@ public class WellbeingAdapter extends RecyclerView.Adapter<WellbeingAdapter.View
             if (item.isSelected()) selected.add(item);
         }
         listener.onItemClick(selected);
+    }
+
+    private void updateBadgeNumbers() {
+        int badge = 1;
+        for (WellbeingItem item : wellbeingList) {
+            if (item.isSelected()) {
+                item.setBadgeNumber(badge++);
+            } else {
+                item.setBadgeNumber(null);
+            }
+        }
+    }
+
+    private int getBadgeNumberForItem(WellbeingItem target) {
+        int badge = 1;
+        for (WellbeingItem item : wellbeingList) {
+            if (item.isSelected()) {
+                if (item == target) return badge;
+                badge++;
+            }
+        }
+        return -1; // should never happen
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

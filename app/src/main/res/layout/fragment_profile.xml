@@ -69,6 +69,18 @@
             app:layout_constraintTop_toBottomOf="@id/tvPassword" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtPasswordError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10dp"
+            android:textColor="@color/crimson_blush"
+            android:visibility="gone"
+            android:text="@string/please_enter_password"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etPassword" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvConfirmPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,7 +89,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etPassword" />
+            app:layout_constraintTop_toBottomOf="@id/txtPasswordError" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/etConfirmPassword"
@@ -95,6 +107,18 @@
             app:layout_constraintTop_toBottomOf="@id/tvConfirmPassword" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtConfirmPasswordError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10dp"
+            android:textColor="@color/crimson_blush"
+            android:visibility="gone"
+            android:text="@string/please_enter_confirm_password"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etConfirmPassword" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvBirthDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -103,7 +127,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etConfirmPassword" />
+            app:layout_constraintTop_toBottomOf="@id/txtConfirmPasswordError" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/etBirthDay"
@@ -111,12 +135,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8dp"
             android:background="@drawable/bg_edittext"
+            android:clickable="true"
+            android:focusable="false"
             android:hint="@string/mm_dd_yyyy"
+            android:inputType="none"
             android:padding="@dimen/_12dp"
             android:textColor="@color/black"
-            android:focusable="false"
-            android:clickable="true"
-            android:inputType="none"
             android:textSize="@dimen/_14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -150,16 +174,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvContactNo" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtContactNoError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10dp"
+            android:textColor="@color/crimson_blush"
+            android:visibility="gone"
+            android:text="@string/please_enter_contact_no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etContactNo" />
+
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/chkPolicy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16dp"
+            android:button="@drawable/circle_checkbox_selector"
+            android:paddingStart="@dimen/_10dp"
+            android:paddingEnd="0dp"
             android:text="I agree to Woliba’s Terms of Service and Privacy Policy."
             android:textColor="@color/black"
             android:textSize="@dimen/_14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etContactNo" />
+            app:layout_constraintTop_toBottomOf="@id/txtContactNoError" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

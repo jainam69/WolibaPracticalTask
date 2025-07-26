@@ -96,8 +96,12 @@ public class WellbeingFragment extends Fragment implements WellbeingAdapter.Well
             interest.append(item.getId()).append(",");
         }
         Map<String, String> inputs = new HashMap<>();
-        inputs.put("wellbeingItem", interest.substring(0, interest.length() - 1));
-        inputs.put("count", String.valueOf(wellbeingItems.size()));
+        if (!wellbeingItems.isEmpty()) {
+            inputs.put("wellbeingItem", interest.substring(0, interest.length() - 1));
+            inputs.put("count", String.valueOf(wellbeingItems.size()));
+        }else {
+            inputs.put("count", "");
+        }
         viewModel.validate(RegistrationStep.WELLBEING, inputs);
     }
 }

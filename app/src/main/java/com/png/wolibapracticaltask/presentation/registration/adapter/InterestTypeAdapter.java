@@ -37,7 +37,6 @@ public class InterestTypeAdapter extends RecyclerView.Adapter<InterestTypeAdapte
         holder.binding.setInterestType(interestTypeList.get(position));
         holder.binding.executePendingBindings();
 
-        // Setup child RecyclerView
         holder.binding.rvChips.setLayoutManager(new FlexboxLayoutManager(holder.itemView.getContext()));
         holder.binding.rvChips.setAdapter(new InterestAdapter(interestTypeList.get(position).getInterests(),this));
 

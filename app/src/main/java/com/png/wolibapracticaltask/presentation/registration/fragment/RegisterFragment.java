@@ -1,6 +1,7 @@
 package com.png.wolibapracticaltask.presentation.registration.fragment;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.png.wolibapracticaltask.R;
-import com.png.wolibapracticaltask.core.SimpleTextWatcher;
 import com.png.wolibapracticaltask.core.common.Common;
 import com.png.wolibapracticaltask.data.model.request.SendOtpRequest;
 import com.png.wolibapracticaltask.data.remote.RetrofitInstance;
@@ -38,6 +38,7 @@ public class RegisterFragment extends Fragment {
     private ValidationViewModel viewModel;
     RegistrationViewModel registrationViewModel;
     public String isEmailVerify = "false";
+    Map<String, String> inputs = new HashMap<>();
 
     @Nullable
     @Override
@@ -71,10 +72,6 @@ public class RegisterFragment extends Fragment {
                     binding.txtEmailError.setText(getString(R.string.email_not_invited));
                 } else {
                     isEmailVerify = response.data.is_verified.toString();
-                    Map<String, String> inputs = new HashMap<>();
-                    inputs.put("firstName", binding.etFirstName.getText().toString());
-                    inputs.put("lastName", binding.etLastName.getText().toString());
-                    inputs.put("email", binding.etEmail.getText().toString());
                     inputs.put("isEmailValid", isEmailVerify);
                     viewModel.validate(RegistrationStep.REGISTER, inputs);
                     binding.etEmail.setEnabled(false);
@@ -90,18 +87,76 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        TextWatcher watcher = new SimpleTextWatcher(() -> {
-            Map<String, String> inputs = new HashMap<>();
-            inputs.put("firstName", binding.etFirstName.getText().toString());
-            inputs.put("lastName", binding.etLastName.getText().toString());
-            inputs.put("email", binding.etEmail.getText().toString());
-            inputs.put("isEmailValid", isEmailVerify);
-            viewModel.validate(RegistrationStep.REGISTER, inputs);
-        });
+        binding.etFirstName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-        binding.etFirstName.addTextChangedListener(watcher);
-        binding.etLastName.addTextChangedListener(watcher);
-        binding.etEmail.addTextChangedListener(watcher);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().trim().isEmpty()) {
+                    binding.txtFirstNameError.setVisibility(View.GONE);
+                } else {
+                    binding.txtFirstNameError.setVisibility(View.VISIBLE);
+                }
+                inputs.put("firstName", charSequence.toString());
+                viewModel.validate(RegistrationStep.REGISTER, inputs);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        binding.etLastName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().trim().isEmpty()) {
+                    binding.txtLastNameError.setVisibility(View.GONE);
+                } else {
+                    binding.txtLastNameError.setVisibility(View.VISIBLE);
+                }
+                inputs.put("lastName", charSequence.toString());
+                viewModel.validate(RegistrationStep.REGISTER, inputs);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        binding.etEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().trim().isEmpty()) {
+                    binding.txtEmailError.setText(getString(R.string.enter_email));
+                    binding.txtEmailError.setVisibility(View.VISIBLE);
+                } else if (!Common.isValidEmail(charSequence.toString().trim())) {
+                    binding.txtEmailError.setText(getString(R.string.enter_valid_email));
+                    binding.txtEmailError.setVisibility(View.VISIBLE);
+                } else {
+                    binding.txtEmailError.setVisibility(View.GONE);
+                }
+                inputs.put("email", charSequence.toString());
+                viewModel.validate(RegistrationStep.REGISTER, inputs);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     private void actionListener() {
