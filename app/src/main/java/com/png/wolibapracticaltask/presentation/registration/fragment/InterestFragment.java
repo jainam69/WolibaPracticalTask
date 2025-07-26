@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.png.wolibapracticaltask.core.common.ProgressBarDialog;
 import com.png.wolibapracticaltask.data.model.response.InterestResponse;
 import com.png.wolibapracticaltask.data.remote.ApiConstants;
 import com.png.wolibapracticaltask.data.remote.RetrofitInstance;
@@ -61,8 +62,10 @@ public class InterestFragment extends Fragment implements InterestTypeAdapter.In
         WellbeingInterestFactory factory = new WellbeingInterestFactory(wellbeingInterestUseCase);
         registrationViewModel = new ViewModelProvider(this, factory).get(RegistrationViewModel.class);
 
+        ProgressBarDialog.show(requireContext());
         registrationViewModel.getWellbeingInterest();
         registrationViewModel.getInterestResponse().observe(getViewLifecycleOwner(), response -> {
+            ProgressBarDialog.hide();
             if (response != null && response.status.equals("success")) {
                 ArrayList<InterestResponse> interestsList = response.data.get(0);
                 ArrayList<InterestType> interestTypes = new ArrayList<>();

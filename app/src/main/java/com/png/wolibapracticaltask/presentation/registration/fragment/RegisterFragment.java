@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.png.wolibapracticaltask.R;
 import com.png.wolibapracticaltask.core.common.Common;
+import com.png.wolibapracticaltask.core.common.ProgressBarDialog;
 import com.png.wolibapracticaltask.data.model.request.SendOtpRequest;
 import com.png.wolibapracticaltask.data.remote.RetrofitInstance;
 import com.png.wolibapracticaltask.data.remote.api.AuthApi;
@@ -63,6 +64,7 @@ public class RegisterFragment extends Fragment {
         registrationViewModel = new ViewModelProvider(this, factory).get(RegistrationViewModel.class);
 
         registrationViewModel.getVerifyEmailResponse().observe(getViewLifecycleOwner(), response -> {
+            ProgressBarDialog.hide();
             if (response != null) {
                 if (response.status.equals("failed")) {
                     Toast.makeText(requireContext(), response.error, Toast.LENGTH_LONG).show();
@@ -168,6 +170,7 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.enter_valid_email), Toast.LENGTH_SHORT).show();
                 } else {
                     Common.hideKeyPad(requireContext(), binding.txtVerify);
+                    ProgressBarDialog.show(requireContext());
                     registrationViewModel.verifyEmail(new SendOtpRequest(binding.etEmail.getText().toString()));
                 }
             }

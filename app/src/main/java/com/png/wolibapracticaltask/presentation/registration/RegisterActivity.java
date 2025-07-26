@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.png.wolibapracticaltask.R;
 import com.png.wolibapracticaltask.core.common.Common;
+import com.png.wolibapracticaltask.core.common.ProgressBarDialog;
 import com.png.wolibapracticaltask.data.model.request.RegistrationRequest;
 import com.png.wolibapracticaltask.data.model.request.SendOtpRequest;
 import com.png.wolibapracticaltask.data.model.request.VerifyOtpRequest;
@@ -85,6 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
         data = viewModel.getRegistrationData();
 
         registrationViewModel.sendOtpResponse().observe(this, response -> {
+            ProgressBarDialog.hide();
             if (response.status.equals("failed")) {
                 Toast.makeText(this, response.error, Toast.LENGTH_LONG).show();
             } else if (response.status.equals("success")) {
@@ -100,6 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         registrationViewModel.getVerifyOtpResponse().observe(this, response -> {
+            ProgressBarDialog.hide();
             if (response.status.equals("failed")) {
                 viewModel.setOTPValid(false);
                 Toast.makeText(this, response.error, Toast.LENGTH_LONG).show();
@@ -145,9 +148,11 @@ public class RegisterActivity extends AppCompatActivity {
         binding.appCompatButton.setOnClickListener(view -> {
             switch (stepCount) {
                 case REGISTER:
+                    ProgressBarDialog.show(this);
                     registrationViewModel.sendOtp(new SendOtpRequest(data.email));
                     break;
                 case OTP:
+                    ProgressBarDialog.show(this);
                     registrationViewModel.verifyOTp(new VerifyOtpRequest(data.otp, token));
                     break;
                 case PROFILE:

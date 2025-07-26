@@ -80,12 +80,12 @@ public class ValidationViewModel extends ViewModel {
                 String contactNo = inputs.get("contactNo");
                 String isConditionValid = inputs.get("isConditionValid");
                 isValid = !(password != null && password.isEmpty()) &&
-                        (password != null && password.length() == 6) &&
+                        (password != null && password.length() > 5) &&
                         !(confirmPassword != null && confirmPassword.isEmpty()) &&
                         Objects.equals(password, confirmPassword) &&
                         !(birthDay != null && birthDay.isEmpty()) &&
                         !(contactNo != null && contactNo.isEmpty()) &&
-                        Objects.requireNonNull(contactNo).length() == 10 &&
+                        contactNo != null && contactNo.length() == 10 &&
                         Objects.equals(isConditionValid, "true");
                 if (isValid) {
                     registrationData.password = password;

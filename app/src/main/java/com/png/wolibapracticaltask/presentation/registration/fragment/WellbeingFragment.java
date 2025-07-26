@@ -12,9 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.png.wolibapracticaltask.core.WellbeingMockData;
-import com.png.wolibapracticaltask.data.model.response.InterestResponse;
-import com.png.wolibapracticaltask.data.remote.ApiConstants;
+import com.png.wolibapracticaltask.core.common.ProgressBarDialog;
 import com.png.wolibapracticaltask.data.remote.RetrofitInstance;
 import com.png.wolibapracticaltask.data.remote.api.AuthApi;
 import com.png.wolibapracticaltask.data.remote.datasource.RegistrationRemoteDataSource;
@@ -23,13 +21,8 @@ import com.png.wolibapracticaltask.data.repository.RegistrationRepository;
 import com.png.wolibapracticaltask.data.repository.RegistrationRepositoryImpl;
 import com.png.wolibapracticaltask.databinding.FragmentWellbeingBinding;
 import com.png.wolibapracticaltask.data.model.response.WellbeingItem;
-import com.png.wolibapracticaltask.domain.model.Interest;
-import com.png.wolibapracticaltask.domain.model.InterestType;
-import com.png.wolibapracticaltask.domain.usecase.WellbeingInterestUseCase;
 import com.png.wolibapracticaltask.domain.usecase.WellbeingPillarUseCase;
-import com.png.wolibapracticaltask.presentation.common.factory.WellbeingInterestFactory;
 import com.png.wolibapracticaltask.presentation.common.factory.WellbeingPillarFactory;
-import com.png.wolibapracticaltask.presentation.registration.adapter.InterestTypeAdapter;
 import com.png.wolibapracticaltask.presentation.registration.adapter.WellbeingAdapter;
 import com.png.wolibapracticaltask.presentation.registration.viewmodel.RegistrationViewModel;
 import com.png.wolibapracticaltask.presentation.state.RegistrationStep;
@@ -66,8 +59,10 @@ public class WellbeingFragment extends Fragment implements WellbeingAdapter.Well
         WellbeingPillarFactory factory = new WellbeingPillarFactory(wellbeingInterestUseCase);
         registrationViewModel = new ViewModelProvider(this, factory).get(RegistrationViewModel.class);
 
+        ProgressBarDialog.show(requireContext());
         registrationViewModel.getWellbeingPillars();
         registrationViewModel.getWellbeingPillarsResponse().observe(getViewLifecycleOwner(), response -> {
+            ProgressBarDialog.hide();
             if (response != null && response.status.equals("success")) {
                 binding.rvWellbeing.setLayoutManager(new LinearLayoutManager(requireContext()));
                 binding.rvWellbeing.setAdapter(new WellbeingAdapter(

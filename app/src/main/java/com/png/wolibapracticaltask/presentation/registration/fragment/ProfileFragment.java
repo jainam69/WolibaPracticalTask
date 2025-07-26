@@ -16,8 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.png.wolibapracticaltask.R;
-import com.png.wolibapracticaltask.core.SimpleTextWatcher;
-import com.png.wolibapracticaltask.core.common.Common;
 import com.png.wolibapracticaltask.databinding.FragmentProfileBinding;
 import com.png.wolibapracticaltask.presentation.state.RegistrationStep;
 import com.png.wolibapracticaltask.presentation.registration.viewmodel.ValidationViewModel;

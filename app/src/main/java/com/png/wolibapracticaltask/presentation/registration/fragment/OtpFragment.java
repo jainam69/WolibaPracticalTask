@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.png.wolibapracticaltask.R;
 import com.png.wolibapracticaltask.core.common.Common;
+import com.png.wolibapracticaltask.core.common.ProgressBarDialog;
 import com.png.wolibapracticaltask.data.model.request.SendOtpRequest;
 import com.png.wolibapracticaltask.data.remote.RetrofitInstance;
 import com.png.wolibapracticaltask.data.remote.api.AuthApi;
@@ -64,7 +65,9 @@ public class OtpFragment extends Fragment {
 
     private void actionListener() {
         binding.txtTimer.setOnClickListener(view -> {
+            String a = data.email;
             if (getString(R.string.resend_otp).equals(binding.txtTimer.getText().toString())) {
+                ProgressBarDialog.show(requireContext());
                 registrationViewModel.sendOtp(new SendOtpRequest(data.email));
             }
         });
@@ -92,7 +95,11 @@ public class OtpFragment extends Fragment {
         registrationViewModel = new ViewModelProvider(this, factory).get(RegistrationViewModel.class);
 
         registrationViewModel.sendOtpResponse().observe(getViewLifecycleOwner(), response -> {
-            if (response != null && response.status.equals("success")) {
+            ProgressBarDialog.hide();
+            if (response.status.equals("failed")) {
+                viewModel.setOTPValid(false);
+                Toast.makeText(requireContext(), response.error, Toast.LENGTH_LONG).show();
+            } else if (response.status.equals("success")) {
                 binding.txtTimer.setTextColor(requireContext().getColor(R.color._184a61));
                 countDownTimer.start();
                 Toast.makeText(requireActivity(), response.data.message, Toast.LENGTH_LONG).show();
